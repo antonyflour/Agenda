@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Agenda.iml" filepath="$PROJECT_DIR$/Agenda.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gson-2.5/gson-2.5.iml" filepath="$PROJECT_DIR$/gson-2.5/gson-2.5.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.restlet/org.restlet.iml" filepath="$PROJECT_DIR$/org.restlet/org.restlet.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.restlet.ext.crypto/org.restlet.ext.crypto.iml" filepath="$PROJECT_DIR$/org.restlet.ext.crypto/org.restlet.ext.crypto.iml" />
+    </modules>
+  </component>
+</project>
