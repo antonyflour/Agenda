@@ -8,16 +8,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:id="@+id/textName"
-        android:hint="Name"
+        android:id="@+id/textDescrizione"
+        android:hint="Descrizione"
         android:layout_gravity="center_horizontal" />
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Place"
-        android:id="@+id/textPlace"
+        android:hint="Luogo"
+        android:id="@+id/textLuogo"
         android:layout_gravity="center_horizontal" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:id="@+id/textCategoria"
+        android:hint="Categoria"
+        android:layout_gravity="center_horizontal" />
+
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,8 +39,8 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="time"
-        android:hint="Length"
-        android:id="@+id/textLength"
+        android:hint="Durata"
+        android:id="@+id/textDurata"
         android:layout_gravity="center_horizontal" />
 
     <EditText
@@ -53,6 +62,8 @@
         android:id="@+id/textTime"
         android:editable="false"
         android:layout_gravity="center_horizontal" />
+
+
 
 
 </LinearLayout>

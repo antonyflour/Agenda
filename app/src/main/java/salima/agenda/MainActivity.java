@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -124,6 +125,7 @@ public class MainActivity extends AppCompatActivity
         JobInfo.Builder builder = new JobInfo.Builder(1,new ComponentName(getPackageName(), JobSchedulerService.class.getName()));
         builder.setPeriodic(10000);
         jobScheduler.schedule(builder.build());
+
     }
 
     private void deleteCredentials(){
@@ -221,38 +223,47 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    // creazione evento
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) throws ParseException {
-        EditText name = (EditText) dialog.getDialog().findViewById(R.id.textName);
-        EditText place = (EditText) dialog.getDialog().findViewById(R.id.textPlace);
-        EditText note = (EditText) dialog.getDialog().findViewById(R.id.textNote);
-        EditText lenght = (EditText) dialog.getDialog().findViewById(R.id.textLength);
-        EditText date = (EditText) dialog.getDialog().findViewById(R.id.textDate);
-        EditText time = (EditText) dialog.getDialog().findViewById(R.id.textTime);
-        String date_time = dateDialog + " " + timeDialog;
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        EditText editDescrizione = (EditText) dialog.getDialog().findViewById(R.id.textDescrizione);
+        EditText editCategoria = (EditText) dialog.getDialog().findViewById(R.id.textCategoria);
+        EditText editLuogo = (EditText) dialog.getDialog().findViewById(R.id.textLuogo);
+        EditText editNote = (EditText) dialog.getDialog().findViewById(R.id.textNote);
+        EditText editDurata = (EditText) dialog.getDialog().findViewById(R.id.textDurata);
+        EditText editDate = (EditText) dialog.getDialog().findViewById(R.id.textDate);
+        EditText editTime = (EditText) dialog.getDialog().findViewById(R.id.textTime);
 
-        int event_id = name.getText().toString().hashCode();
-        while (!getEventId(event_id + "")) event_id++;
+        String descrizione = editDescrizione.getText().toString();
+        String categoria = editCategoria.getText().toString();
 
-        if (name.getText().toString().equals("")) {
-            Toast.makeText(getApplicationContext(), "Please insert a name for your event", Toast.LENGTH_SHORT).show();
+        String luogo = editLuogo.getText().toString();
+        String note = editNote.getText().toString();
+        String durata = editDurata.getText().toString();
+
+        if (categoria.equals("")) {
+            Toast.makeText(getApplicationContext(), "Please insert a category for your event", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (date.getText().toString().equals("")) {
+        if (descrizione.equals("")) {
+            Toast.makeText(getApplicationContext(), "Please insert a description for your event", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (editDate.getText().toString().equals("")) {
             Toast.makeText(getApplicationContext(), "Please insert a date for your event", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (time.getText().toString().equals("")) {
+        if (editTime.getText().toString().equals("")) {
             Toast.makeText(getApplicationContext(), "Please insert a time for your event", Toast.LENGTH_SHORT).show();
             return;
         }
 
-//String descrizione, String luogo, Date data, Time ora, Time tempStimato,
-       // String noteAggiuntive, String categoria
-        Evento event = new Evento(null, null, null, null, null, null, null);
-        //event.setCategory(currentCategory);
-        new PostEventTask(BASE_URI + "handleevents/" + "/" + username + "/" + currentCategory + "/" + event_id).execute(event);
+        //creo un nuovo evento
+        Log.i("**CREO EVENTO: ", dateDialog);
+        Evento event = new Evento(descrizione, luogo, dateDialog, timeDialog, durata, note, categoria);
+
+        //effettuo il post per aggiungere l'evento
+        new PostEventTask(BASE_URI + "events").execute(event);
     }
 
     private int getMinutes(String toFormat) {
@@ -270,33 +281,7 @@ public class MainActivity extends AppCompatActivity
         new FragmentAddCategory().show(getFragmentManager(), "category");
     }
 
-    public void deleteCategory(View v) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                new DeleteCategoryTask(BASE_URI + "handlecategories/" +  "/" + username + "/" + currentCategory).execute();
 
-            }
-        })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //niente
-                    }
-                })
-                .setMessage("Are you really sure?!")
-                .setTitle("Delete category")
-                .create()
-                .show();
-    }
-
-
-    private boolean getEventId(String code) {
-        for (Evento e : currentEvents)
-            if (e.getId().equals(code))
-                return false;
-        return true;
-    }
 
     @Override
     public void onDialogNegativeClick(DialogFragment x) {
@@ -305,7 +290,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        dateDialog = dayOfMonth + "/" + monthOfYear + "/" + year;
+        dateDialog = dayOfMonth + "/" + (monthOfYear+1) + "/" + year;
         FragmentAddEvent.updateDate(dateDialog);
 
     }
@@ -317,10 +302,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onDialog2PositiveClick(DialogFragment dialog) throws ParseException {
-        EditText name = (EditText) dialog.getDialog().findViewById(R.id.textNameC);
-        String category = name.getText().toString();
-        new PostCategorytTask(BASE_URI + "handlecategories/"+ "/" + username + "/" + category).execute(category);
+    public void onDialog2PositiveClick(DialogFragment x) throws ParseException {
 
     }
 
@@ -365,6 +347,7 @@ public class MainActivity extends AppCompatActivity
 
                 case ErrorCodes.EVENTI_INESISTENTI_EXC_NUMBER:
                     c = new String[0];
+                    break;
                 default:
                     Evento[] eventi = gson.fromJson(res, Evento[].class);
                     List<String> categorie = new ArrayList<String>();
@@ -373,6 +356,7 @@ public class MainActivity extends AppCompatActivity
                             categorie.add(e.getCategoria());
                         }
                     }
+                    c = new String[categorie.size()];
                     c = categorie.toArray(c);
             }
             return c;
@@ -380,7 +364,6 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(String[] category) {
-            super.onPostExecute(category);
             updateCategories(category);
         }
     }
@@ -419,6 +402,7 @@ public class MainActivity extends AppCompatActivity
                     eventi.add(e);
                 }
             }
+            events = new Evento[eventi.size()];
             events = eventi.toArray(events);
 
             return events;
@@ -447,103 +431,17 @@ public class MainActivity extends AppCompatActivity
             ClientResource cr = new ClientResource(uri);
             Gson gson = new Gson();
 
+            cr.setChallengeResponse(ChallengeScheme.HTTP_BASIC, username, password);
             cr.post(gson.toJson(params[0], Evento.class));
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            new GetEventTask(BASE_URI +"events", currentCategory).execute();
+            new GetCategoriesTask(BASE_URI + "events").execute();
         }
     }
 
-
-    /* POST  CATEGORY */
-    public class PostCategorytTask extends AsyncTask<String, Void, Void> {
-        private String uri;
-
-        public PostCategorytTask(String uri) {
-            this.uri = uri;
-        }
-
-        @Override
-        protected Void doInBackground(String... params) {
-            ClientResource cr = new ClientResource(uri);
-            Gson gson = new Gson();
-
-            cr.post(gson.toJson(params[0], String.class));
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            //new GetCategoriesTask(BASE_URI + "allcategories/" + code + "/" + username).execute();
-        }
-    }
-
-//
-//
-//    /* DELETE  USER*/
-//    public class DeleteUsertTask extends AsyncTask<String, Void, Void> {
-//        String res;
-//        String uri;
-//
-//        public DeleteUsertTask(String uri) {
-//            super();
-//            this.uri = uri;
-//        }
-//
-//        @Override
-//        protected Void doInBackground(String... params) {
-//            final ClientResource clientResource = new ClientResource(uri);
-//            try {
-//                res = clientResource.delete().getText();
-//            } catch (ResourceException e) {
-//                e.printStackTrace();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Void aVoid) {
-//            SharedPreferences sharedPreferences = getSharedPreferences(Login.SH, MODE_PRIVATE);
-//            SharedPreferences.Editor editor = sharedPreferences.edit();
-//            editor.remove("username");
-//            editor.remove("password");
-//            editor.commit();
-//            Toast.makeText(getApplicationContext(), "Your account has been deleted! ", Toast.LENGTH_SHORT).show();
-//            startActivity(new Intent(getApplicationContext(), Login.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
-//        }
-//    }
-
-    /* DELETE  CATEGORY*/
-    public class DeleteCategoryTask extends AsyncTask<String, Void, Void> {
-        String uri;
-
-        public DeleteCategoryTask(String uri) {
-            super();
-            this.uri = uri;
-        }
-
-        @Override
-        protected Void doInBackground(String... params) {
-            final ClientResource clientResource = new ClientResource(uri);
-            try {
-                clientResource.delete();
-            } catch (ResourceException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            //new GetCategoriesTask(BASE_URI + "allcategories/"+ "/" + username).execute();
-        }
-    }
 
     public void datePic(View v) {
         new DatePickerDialogFragment().show(getFragmentManager(), "date");
@@ -557,7 +455,7 @@ public class MainActivity extends AppCompatActivity
         return username;
     }
 
-    public static String getCode(){
+    public static String getPassword(){
         return password;
     }
 

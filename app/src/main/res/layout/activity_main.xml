@@ -21,26 +21,6 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main">
 
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="left|bottom"
-            android:layout_marginBottom="3dp"
-            android:onClick="addCategory"
-            android:src="@drawable/ic_add_24dp"
-            android:id="@+id/newCategory"
-            app:backgroundTint="#a90000" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="right|bottom"
-            android:layout_marginBottom="3dp"
-            android:onClick="deleteCategory"
-            android:src="@drawable/ic_remove_24dp"
-            android:id="@+id/delete_category"
-            app:backgroundTint="#a90000" />
-
     </android.support.design.widget.NavigationView>
 
 

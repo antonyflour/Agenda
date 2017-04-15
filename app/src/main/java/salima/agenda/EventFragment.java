@@ -84,7 +84,6 @@ public class EventFragment extends ListFragment {
 
 
         public class CustomAdpter extends ArrayAdapter<Evento>{
-        SimpleDateFormat sd = new SimpleDateFormat("dd/MM/yyyy HH:mm");
             public CustomAdpter(Context context, int resource, List<Evento> objects) {
                 super(context, resource, objects);
             }
@@ -96,8 +95,8 @@ public class EventFragment extends ListFragment {
                 convertView =inflater.inflate(R.layout.event_item,null);
                 TextView textView1 = (TextView) convertView.findViewById(R.id.textview1);
                 TextView textView2 = (TextView) convertView.findViewById(R.id.textview2);
-                //textView1.setText(getItem(position).getName());
-                //textView2.setText(sd.format(getItem(position).getDate()));
+                textView1.setText(getItem(position).getDescrizione());
+                textView2.setText(getItem(position).getData());
                 return convertView;
             }
 

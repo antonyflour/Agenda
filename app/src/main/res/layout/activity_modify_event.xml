@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:id="@+id/textName"
+        android:id="@+id/textDescrizione"
         android:hint="Name"
         android:layout_gravity="center_horizontal" />
     <EditText
@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Place"
-        android:id="@+id/textPlace"
+        android:id="@+id/textLuogo"
         android:layout_gravity="center_horizontal" />
     <EditText
         android:layout_width="wrap_content"
@@ -30,8 +30,8 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="time"
-        android:hint="Length"
-        android:id="@+id/textLength"
+        android:hint="Durata"
+        android:id="@+id/textDurata"
         android:layout_gravity="center_horizontal" />
 
     <EditText
@@ -57,14 +57,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save"
-        android:id="@+id/saveButton"
-        android:layout_gravity="center_horizontal" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Delete"
+        android:text="Delete Event"
         android:id="@+id/deleteButton"
         android:layout_gravity="center_horizontal" />
 
